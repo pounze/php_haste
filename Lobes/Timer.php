@@ -1,5 +1,7 @@
 <?php
-
+	
+	namespace Libraries\Lobes\Miscellaneous;
+	
 	class Timer
 	{
 		public static function setTimeout($callback,$time)
