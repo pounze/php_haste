@@ -45,13 +45,13 @@ To see some sample codes you can go through the folders there some codes are wri
 
 Example 1:
 
-<br>
-<b>
 Basic Routing
-</b>
+
 route/Web.php
 
-<?php
+<b>
+ <?php
+</b>
         use Kernel\App\RequestRoute\Route;
 	use Kernel\App\Core\Views;
 	use Kernel\App\Core\Response;
@@ -315,7 +315,9 @@ Timer::setTimeInterval(function()
   echo 'I am george';
 });
 
+<b>
 ?>
+</b>
 // new documentation will be updated very soon and new version 1.1 with better performance and features
 
 // Till then enjoy coding :)
