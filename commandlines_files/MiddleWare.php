@@ -2,7 +2,7 @@
 
 	class MiddleWare
 	{
-		public function MiddleWareMethod($input)
+		public function __init__($input)
 		{
 			return [true,'ValidAge'=>true];
 		}
