@@ -45,8 +45,10 @@ To see some sample codes you can go through the folders there some codes are wri
 
 Example 1:
 
+<br>
+<b>
 Basic Routing
-
+</b>
 route/Web.php
 
 <?php
