@@ -57,7 +57,7 @@ Basic Routing
 In route/Web.php
 
 <?php
-  use Kernel\App\RequestRoute\Route;
+        use Kernel\App\RequestRoute\Route;
 	use Kernel\App\Core\Views;
 	use Kernel\App\Core\Response;
   
@@ -320,7 +320,7 @@ Timer::setTimeInterval(function()
   echo 'I am george';
 });
 
-
+?>
 // new documentation will be updated very soon and new version 1.1 with better performance and features
 
 // Till then enjoy coding :)
