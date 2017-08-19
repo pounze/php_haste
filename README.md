@@ -49,9 +49,9 @@ Basic Routing
 
 route/Web.php
 
-<b>
+<span font-color="#666">
  <?php
-</b>
+</span>
         use Kernel\App\RequestRoute\Route;
 	use Kernel\App\Core\Views;
 	use Kernel\App\Core\Response;
@@ -315,9 +315,9 @@ Timer::setTimeInterval(function()
   echo 'I am george';
 });
 
-<b>
+<span>
 ?>
-</b>
+</span>
 // new documentation will be updated very soon and new version 1.1 with better performance and features
 
 // Till then enjoy coding :)
