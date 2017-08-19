@@ -4,8 +4,6 @@ Its the first version of php Haste Framework.
 Our target is to provide developer a platform to write less codes and achieve good performance
 this version is tested but some modules are not yet deployed
 
-##############################
-
 In the next version we will provide 
 
 PHP template engine
@@ -18,11 +16,8 @@ php two way data binding support
 php some new features will be available till then please use this framework and let us know in (sudeepdasgupta25@gmail.com) 
 and you can also join us to make it best framework ever for php
 
-###########################################################################
 
 Following are some examples of the framework, proper documentation will be provided in the http://www.pounze.com/devs/ official site very soon
-
-##############################################################################
 
 Before starting it let me discuss about the directory structure
 
@@ -46,22 +41,20 @@ Two files in the root directory :
 1) ign: it is made to run some commands to create controller,run server etc.
 2) WebSocket: to work with websocket just run php WebSocket and it will start websocket and will direct request to specific controllers
 
-########################################################################################
-
 To see some sample codes you can go through the folders there some codes are written.
 
 Example 1:
 
 Basic Routing
 
-In route/Web.php
+route/Web.php
 
 <?php
         use Kernel\App\RequestRoute\Route;
 	use Kernel\App\Core\Views;
 	use Kernel\App\Core\Response;
   
-  $route = new Route();
+        $route = new Route();
   
   /*
   This method is a simple get request router which is returning hello world
