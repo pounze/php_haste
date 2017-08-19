@@ -1,0 +1,38 @@
+<?php
+	
+	$config = [
+		"mySql"=>
+		[
+			"host"=>"localhost",
+			"username"=>"root",
+			"password"=>"",
+			"database"=>"tripkle",
+			"log"=>false
+		],
+		"server"=>
+		[
+			"port"=>8100,
+			"maintenance"=>false,
+			"time_limit"=>"0"
+		],
+		"redis"=>[],
+		"memcache"=>[],
+		"mongo"=>[],
+		"log"=>false,
+		"log_path"=>"",
+		"error"=>
+		[
+			"error_reporting"=>E_ALL,
+			"display_errors"=>"Off",
+		],
+		"webSocket"=>
+		[
+			"socket_ip"=>"localhost",
+			"socket_port"=>"9000",
+			"socket_max_timeout"=>30,
+			"socket_max_connection"=>100
+		],
+		"base_path"=>"haste",
+		"FCM_KEY"=>"AAAAZkrH5wk:APA91bE5egaTJad__A8HYxdWIygQW8HJhVWRF0GNE4Yi9Q8ZOioKwM10dK1VD7dGZIVl6fsecttCQn8Vv5VkR00qsnmflV3MKAZYDc8Jvw8lx18vDF4iRceJYJ2wBcA0oEEznxlPkuK9"
+	];
+?>

@@ -1,0 +1,186 @@
+<?php
+	
+	define( 'ROOT_DIR', dirname(__DIR__));
+
+	if(!is_array($argv))
+	{
+		die('Please enter second argument to run a command');
+	}
+
+	switch($argv)
+	{
+		case strtolower($argv[1]) == 'make:controller';
+		makeController($argv);
+		break;
+		case strtolower($argv[1]) == 'make:mapping:controller';
+		makeMappingController($argv);
+		break;
+		case strtolower($argv[1]) == 'commands';
+		Commands($argv);
+		break;
+		case strtolower($argv[1]) == 'showconfig';
+		showConfig($argv);
+		break;
+		case strtolower($argv[1]) == 'showallcontrollers';
+		showAllControllers($argv);
+		break;
+		case strtolower($argv[1]) == 'startserver';
+		startServer($argv);
+		break;
+		case strtolower($argv[1]) == 'serverdown';
+		serverDown($argv);
+		break;
+		case strtolower($argv[1]) == 'serverup';
+		serverUp($argv);
+		break;
+		case strtolower($argv[1]) == 'make:model';
+		makeModel($argv);
+		break;
+		case strtolower($argv[1]) == 'make:middleware';
+		makeMiddleware($argv);
+		break;
+		default:
+		print "Please write php ign commands for help";
+	}
+
+	function startServer($argv)
+	{
+		include_once ROOT_DIR.'/haste/config/configuration.php';
+		print "Server started type localhost:".$config["server"]["port"]." in browser";
+		shell_exec('PHP -S localhost:'.$config["server"]["port"]);
+	}
+
+	function serverDown($argv)
+	{
+		$config = file_get_contents(ROOT_DIR.'/haste/config/configuration.php');
+		$config = str_replace('"maintenance"=>false','"maintenance"=>true', $config);
+		file_put_contents(ROOT_DIR.'/haste/config/configuration.php',$config);
+		print "Server is under maintenance";
+	}
+
+	function serverUp($argv)
+	{
+		$config = file_get_contents(ROOT_DIR.'/haste/config/configuration.php');
+		$config = str_replace('"maintenance"=>true','"maintenance"=>false', $config);
+		file_put_contents(ROOT_DIR.'/haste/config/configuration.php',$config);
+		print "Server is live again";
+	}
+
+
+	function makeController($argv)
+	{
+		if(sizeof($argv) == 3)
+		{
+			file_put_contents(ROOT_DIR.'/haste/controllers/'.$argv[2].'.php', str_replace('Controller',$argv[2],file_get_contents(ROOT_DIR.'/haste/commandlines_files/Controller.php')));
+
+			if(file_exists(ROOT_DIR.'/haste/controllers/'.$argv[2].'.php'))
+			{
+				print 'Controller created successfully';
+			}
+			else
+			{
+				print 'Directory does not have read or write option';
+			}
+		}
+		else
+		{
+			print 'Three arguments are needed to create a controller, eg(php ign make:controller controller_name)';
+		}
+	}
+
+	function makeModel($argv)
+	{
+		if(sizeof($argv) == 3)
+		{
+			file_put_contents(ROOT_DIR.'/haste/models/'.$argv[2].'.php', str_replace('Model',$argv[2],file_get_contents(ROOT_DIR.'/haste/commandlines_files/Model.php')));
+
+			if(file_exists(ROOT_DIR.'/haste/models/'.$argv[2].'.php'))
+			{
+				print 'Model created successfully';
+			}
+			else
+			{
+				print 'Directory does not have read or write option';
+			}
+		}
+		else
+		{
+			print 'Three arguments are needed to create a model, eg(php ign make:model model_name)';
+		}
+	}
+
+	function makeMiddleware($argv)
+	{
+		if(sizeof($argv) == 3)
+		{
+			file_put_contents(ROOT_DIR.'/haste/middlewares/'.$argv[2].'.php', str_replace('MiddleWare',$argv[2],file_get_contents(ROOT_DIR.'/haste/commandlines_files/MiddleWare.php')));
+
+			if(file_exists(ROOT_DIR.'/haste/middlewares/'.$argv[2].'.php'))
+			{
+				print 'MiddleWare created successfully';
+			}
+			else
+			{
+				print 'Directory does not have read or write option';
+			}
+		}
+		else
+		{
+			print 'Three arguments are needed to create a middleware, eg(php ign make:middleware middleware_name)';
+		}
+	}
+
+	function makeMappingController($argv)
+	{
+		if(!file_exists(ROOT_DIR.'/haste/'.$argv[2]))
+		{
+			mkdir(ROOT_DIR.'/haste/'.$argv[2],0777, true);
+		}
+
+		if(sizeof($argv) == 4)
+		{
+			file_put_contents(ROOT_DIR.'/haste/'.$argv[2].'/'.$argv[3].'.php', str_replace('Controller',$argv[3],file_get_contents(ROOT_DIR.'/haste/commandlines_files/Controller.php')));
+
+			if(file_exists(ROOT_DIR.'/haste/'.$argv[2].'/'.$argv[3].'.php'))
+			{
+				print 'Controller created successfully';
+			}
+			else
+			{
+				print 'Directory does not have read or write option';
+			}
+		}
+		else
+		{
+			print 'Four arguments are needed to create a controller, eg(php ign make:mapping:controller mapping_name controller_name)';
+		}
+	}
+
+	function Commands($argv)
+	{
+		print ("
+			1.) php ign make:controller (To create a controller)
+			2.) php ign make:mapping:controller (To create a mapping  controller) 
+			3.) php ign commands (To show list of commands)
+			4.) php ign showconfig (Configuration of the framework and server)
+			5.) php ign showallcontrollers (List of controllers)
+			6.) php ign serverdown (For server maintenance)
+			7.) php ign serverup (For server live)
+			8.) php ign startserver (For running server)
+			");
+	}
+
+	function showConfig($argv)
+	{
+		include ROOT_DIR.'/haste/config/configuration.php';
+
+		print_r(json_encode($config));
+	}
+
+	function showAllControllers($argv)
+	{
+		$controllers = array_diff(scandir(ROOT_DIR.'/haste/controllers'), array('..', '.'));
+
+		print_r($controllers);
+	}
+?>
