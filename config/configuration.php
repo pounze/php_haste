@@ -4,20 +4,28 @@
 		"mySql"=>
 		[
 			"host"=>"localhost",
-			"username"=>"root",
+			"port"=>3306,
+			"username"=>"",
 			"password"=>"",
-			"database"=>"tripkle",
+			"database"=>"",
 			"log"=>false
 		],
 		"server"=>
 		[
-			"port"=>8100,
+			"port"=>80,
 			"maintenance"=>false,
 			"time_limit"=>"0"
 		],
 		"redis"=>[],
 		"memcache"=>[],
-		"mongo"=>[],
+		"mongo"=>
+		[
+			"host"=>"localhost",
+			"port"=>27017,
+			"username"=>"root",
+			"password"=>"root123",
+			"database"=>"DB"
+		],
 		"log"=>false,
 		"log_path"=>"",
 		"error"=>
@@ -32,7 +40,7 @@
 			"socket_max_timeout"=>30,
 			"socket_max_connection"=>100
 		],
-		"base_path"=>"haste",
+		"base_path"=>"ats",
 		"FCM_KEY"=>"AAAAZkrH5wk:APA91bE5egaTJad__A8HYxdWIygQW8HJhVWRF0GNE4Yi9Q8ZOioKwM10dK1VD7dGZIVl6fsecttCQn8Vv5VkR00qsnmflV3MKAZYDc8Jvw8lx18vDF4iRceJYJ2wBcA0oEEznxlPkuK9"
 	];
 ?>
