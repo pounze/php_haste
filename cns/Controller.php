@@ -8,6 +8,7 @@ namespace Kernel\App\Core;
 
 require_once ROOT_DIR.'/cns/Thalamus.php';
 require_once ROOT_DIR.'/cns/mySQL.php';
+require_once ROOT_DIR.'/cns/MongoDB.php';
 require_once ROOT_DIR.'/cns/Orm.php';
 
 use Kernel\App\Core\BlockList;
@@ -51,6 +52,12 @@ use Kernel\App\Core\Thalamus;
 				header("HTTP/1.0 404 Not Found");
 				die();
 			}
+		}
+
+		public function __destruct()
+		{
+			unset($mongoObject);
+			unset($mySQLObject);
 		}
 	}
 

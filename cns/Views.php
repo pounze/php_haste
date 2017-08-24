@@ -6,12 +6,12 @@
 
 	class Views
 	{
-		public static function render($view_name,$views_data)
+		public static function render($view_name,$views_data = null)
 		{
 			if(file_exists('templates/'.$view_name.'.php'))
 			{
-				include_once 'templates/'.$view_name.'.php';
 				require_once 'common_templates/common_templates.php';
+				include_once 'templates/'.$view_name.'.php';
 			}
 			else
 			{

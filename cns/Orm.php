@@ -4,9 +4,8 @@
 	obejct relation mapping class for mysql
 */
   
-  namespace mySQLORM;
-  require_once 'config/configuration.php';
-
+  namespace DB;
+  
 	class Orm
 
 	{
@@ -34,8 +33,9 @@
 				contact sudeep.ignition@gmail.com for any query
 
 			*/
-
-		try 
+		if(isset($config["mySql"]["username"]) && !empty($config["mySql"]["username"]) && isset($config["mySql"]["password"]) && !empty($config["mySql"]["password"]))
+		{
+		  try 
           {
           	$this->host = $config["mySql"]["host"];
 
@@ -53,7 +53,7 @@
               file_put_contents(ROOT_DIR.'/logs/mySQL.log', $e->getMessage(). PHP_EOL, FILE_APPEND);
             }
           }
-
+		}
 			$this->query = "";
 		}
 

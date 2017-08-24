@@ -19,7 +19,7 @@
 			*/
 
 			$this->request_uri =  parse_url($_SERVER['REQUEST_URI']);
-			$this->request_uri['path'] = str_replace('haste/','', $this->request_uri['path']);
+			$this->request_uri['path'] = str_replace('ats/','', $this->request_uri['path']);
 
 			/*
 				This line is checking for request method whether its a post request or any other request using $_REQUEST['REQUEST_METHOD'] globals variables

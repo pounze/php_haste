@@ -2,9 +2,7 @@
     
 
   namespace DB;
-
-  require_once 'config/configuration.php';
-
+  
   class mySQL
   {
 
@@ -18,23 +16,26 @@
         /*
             php pdo connection is initiated
         */
-        try 
+        if(isset($user) && !empty($user) && isset($password) && !empty($password))
         {
-          self::$db = new \PDO("mysql:host=".$host.";dbname=".$dbname,$user,$password);
-        }
-        catch(\PDOException $e)
-        {
-
-          /*
-            If error is thrown then mysql_connect_error.html page is thrown
-          */
-          echo file_get_contents(ROOT_DIR."/error_files/mysql_connect_error.html");
-
-          if($config["mySql"]["log"])
+          try 
           {
-            file_put_contents(ROOT_DIR.'/logs/mySQL.log', $e->getMessage(). PHP_EOL, FILE_APPEND);
+            self::$db = new \PDO("mysql:host=".$host.";dbname=".$dbname,$user,$password);
           }
-          die();
+          catch(\PDOException $e)
+          {
+
+            /*
+              If error is thrown then mysql_connect_error.html page is thrown
+            */
+            echo file_get_contents(ROOT_DIR."/error_files/mysql_connect_error.html");
+
+            if($config["mySql"]["log"])
+            {
+              file_put_contents(ROOT_DIR.'/logs/mySQL.log', $e->getMessage(). PHP_EOL, FILE_APPEND);
+            }
+            die();
+          }
         }
     }
 
@@ -208,11 +209,12 @@
 
       public function __destruct()
       {
+        self::$db = null;
         unset($ConfigOBJ);
       }
 
   }
 
-$dbobj = new mySQL($config["mySql"]["host"],$config["mySql"]["database"],$config["mySql"]["username"],$config["mySql"]["password"],$config);
+$mySQLObject = new mySQL($config["mySql"]["host"],$config["mySql"]["database"],$config["mySql"]["username"],$config["mySql"]["password"],$config);
 
 ?>
