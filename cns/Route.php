@@ -19,7 +19,7 @@
 			*/
 
 			$this->request_uri =  parse_url($_SERVER['REQUEST_URI']);
-			$this->request_uri['path'] = str_replace('ats/','', $this->request_uri['path']);
+			$this->request_uri['path'] = str_replace('haste/','', $this->request_uri['path']);
 
 			/*
 				This line is checking for request method whether its a post request or any other request using $_REQUEST['REQUEST_METHOD'] globals variables
@@ -62,20 +62,14 @@
 
 		public function Authorization()
 		{
-			$headers = array();
-			foreach ($_SERVER as $key => $value)
-			{
-			    if (strpos($key, 'HTTP_') === 0)
-			    {
-			        $headers[str_replace(' ', '', ucwords(str_replace('_', ' ', strtolower(substr($key, 5)))))] = $value;
-			    }
+			if(isset($_SERVER['PHP_AUTH_PW']) && isset($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW']) && !empty($_SERVER['PHP_AUTH_USER']))
+			{	
+				return [$_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW']];
 			}
-
-			$authorization = explode(" ", $headers['Authorization']);
-			$authorization = $authorization[1];
-			$decodedHeader = explode(":", base64_decode($authorization));
-
-			return $decodedHeader;
+			else
+			{
+				return false;
+			}
 		}
 
 		public function BlockDirectories($blockPages)
