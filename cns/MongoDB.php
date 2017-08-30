@@ -57,7 +57,7 @@
 		{
 			try
 			{
-				$command = new MongoDB\Driver\Command($query);
+				$command = new \MongoDB\Driver\Command($query);
 
 				return self::$manager->executeCommand($collectionName,$command);
 			}
@@ -73,7 +73,7 @@
 
 		public static function createBulkObject()
 		{
-			return new MongoDB\Driver\BulkWrite();
+			return new \MongoDB\Driver\BulkWrite();
 		}
 
 		/*
@@ -84,7 +84,7 @@
 		{
 			try
 			{
-				$writeConcern = new MongoDB\Driver\WriteConcern(MongoDB\Driver\WriteConcern::MAJORITY,100);
+				$writeConcern = new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY,100);
 			    return self::$manager->executeBulkWrite($collectionName,$bulkObj,$writeConcern);
 			}
 			catch(MongoDB\Driver\Exception\Exception $e)
