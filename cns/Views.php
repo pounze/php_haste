@@ -6,12 +6,12 @@
 
 	class Views
 	{
-		public static function render($view_name,$views_data = null)
+		public static function render($view_name,$views_data)
 		{
 			if(file_exists('templates/'.$view_name.'.php'))
 			{
-				require_once 'common_templates/common_templates.php';
 				include_once 'templates/'.$view_name.'.php';
+				require_once 'common_templates/common_templates.php';
 			}
 			else
 			{
@@ -25,15 +25,28 @@
 			
 			if(empty($file))
 			{
-				include_once ROOT_DIR.'/error_files/404.html';
-
+				eader("Cache-Control: public,max-age=31536000");
+				header("Keep-Alive: timeout=5, max=500");
+				header("Expires:"+date("Y-m-d H:i:s"));
+				header("Server: public,Node Server");
+				header("Developed-By: Pounze It-Solution Pvt Limited");
+				header("Pragma: public,max-age=31536000");
 				header("HTTP/1.0 404 Not Found");
+				include_once ROOT_DIR.'/error_files/404.html';
+				die();
 			}
 
 			// if file exists then string are replaced
 
 			if(file_exists(ROOT_DIR.'/views/'.$file))
 			{
+				header("Cache-Control: public,max-age=31536000");
+				header("Keep-Alive: timeout=5, max=500");
+				header("Expires:"+date("Y-m-d H:i:s"));
+				header("Server: public,Node Server");
+				header("Developed-By: Pounze It-Solution Pvt Limited");
+				header("Pragma: public,max-age=31536000");
+
 				$ob = ob_start();
 				$stuff = ob_get_contents();
 
@@ -49,6 +62,13 @@
 			}
 			else
 			{
+				header('HTTP/1.0 404 Not Found');
+				header("Cache-Control: public,max-age=31536000");
+				header("Keep-Alive: timeout=5, max=500");
+				header("Expires:"+date("Y-m-d H:i:s"));
+				header("Server: public,Node Server");
+				header("Developed-By: Pounze It-Solution Pvt Limited");
+				header("Pragma: public,max-age=31536000");
 				include_once ROOT_DIR.'/error_files/404.html';
 			}
 		}
