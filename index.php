@@ -23,6 +23,7 @@ require_once 'Lobes/Net.php';
 require_once 'Lobes/Remote.php';
 require_once 'Lobes/Scaleimage.php';
 require_once 'Lobes/Timer.php';
+require_once 'Lobes/ObjectMeth.php';
 require_once 'cns/BlockList.php';
 
 
@@ -37,6 +38,7 @@ use Libraries\Lobes\Miscellaneous\Net;
 use Libraries\Lobes\Miscellaneous\Remote;
 use Libraries\Lobes\Miscellaneous\Scaleimage;
 use Libraries\Lobes\Miscellaneous\Timer;
+use Libraries\Lobes\Miscellaneous\ObjectMeth;
 use Kernel\App\RequestRoute\Route;
 use Kernel\App\Core\BlockList;
 
@@ -64,7 +66,7 @@ try
 
 			if(isset($_REQUEST['cortex']) && !empty($_REQUEST['cortex']))
 			{
-				echo 'Oops, we are sorry server is under maintenance';
+				echo json_encode(['status'=>false,'msg'=>'Oops, we are sorry server is under maintenance']);
 			}
 			else
 			{
@@ -74,43 +76,23 @@ try
 	}
 	else
 	{
-		if(isset($_REQUEST) && !empty($_REQUEST) && isset($_REQUEST['cortex']))
+		if(isset($_REQUEST) && !empty($_REQUEST) && isset($_REQUEST['cortex']) && $_SERVER['REQUEST_METHOD'] == 'POST')
 		{
-			if($_SERVER['REQUEST_METHOD'] === 'POST')
-			{
-				$_REQUEST = null;
-				$_GET = null;
-				$_POST['url'] = $_SERVER['REQUEST_URI'];
-				new Controller($_POST,@$_FILES);
-			}
-			else
-			{
-				$_REQUEST = null;
-				$_POST = null;
-				$_GET['url'] = $_SERVER['REQUEST_URI'];
-				new Controller($_GET,@$_FILES);
-			}
+			$_REQUEST = null;
+			$_GET = null;
+			$_POST['url'] = $_SERVER['REQUEST_URI'];
+			new Controller($_POST,@$_FILES);
 		}
 		else
 		{
 			$_REQUEST = json_decode(file_get_contents('php://input'), true);
 
-			if(isset($_REQUEST['cortex']) && !empty($_REQUEST['cortex']))
+			if(isset($_REQUEST['cortex']) && !empty($_REQUEST['cortex']) && $_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				if($_SERVER['REQUEST_METHOD'] === 'POST')
-				{
-					$_REQUEST = null;
-					$_GET = null;
-					$_POST['url'] = $_SERVER['REQUEST_URI'];
-					new Controller($_POST,@$_FILES);
-				}
-				else
-				{
-					$_REQUEST = null;
-					$_POST = null;
-					$_GET['url'] = $_SERVER['REQUEST_URI'];
-					new Controller($_GET,@$_FILES);
-				}
+				$_REQUEST = null;
+				$_GET = null;
+				$_POST['url'] = $_SERVER['REQUEST_URI'];
+				new Controller($_POST,@$_FILES);
 			}
 			else
 			{
