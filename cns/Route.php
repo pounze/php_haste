@@ -13,6 +13,7 @@
 		*/
 		public function __construct()
 		{
+			$this->date = date("D, m Y H:i:s");
 			/*
 				setting the request uri variables
 			*/
@@ -138,7 +139,7 @@
     		header('HTTP/1.0 401 Unauthorized');
     		header("Cache-Control: public,max-age=31536000");
 			header("Keep-Alive: timeout=5, max=500");
-			header("Expires:"+date("Y-m-d H:i:s"));
+			header("Expires:$this->date");
 			header("Server: public,Node Server");
 			header("Developed-By: Pounze It-Solution Pvt Limited");
 			header("Pragma: public,max-age=31536000");
@@ -203,7 +204,7 @@
 						header('HTTP/1.0 403 Forbidden');
 						header("Cache-Control: public,max-age=31536000");
 						header("Keep-Alive: timeout=5, max=500");
-						header("Expires:"+date("Y-m-d H:i:s"));
+						header("Expires:$this->date");
 						header("Server: public,Node Server");
 						header("Developed-By: Pounze It-Solution Pvt Limited");
 						header("Pragma: public,max-age=31536000");
@@ -254,7 +255,7 @@
 				header('HTTP/1.0 404 Not Found');
 				header("Cache-Control: public,max-age=31536000");
 				header("Keep-Alive: timeout=5, max=500");
-				header("Expires:"+date("Y-m-d H:i:s"));
+				header("Expires:$this->date");
 				header("Server: public,Node Server");
 				header("Developed-By: Pounze It-Solution Pvt Limited");
 				header("Pragma: public,max-age=31536000");
@@ -339,7 +340,7 @@
 								header('HTTP/1.0 404 Not Found');
 								header("Cache-Control: public,max-age=31536000");
 								header("Keep-Alive: timeout=5, max=500");
-								header("Expires:"+date("Y-m-d H:i:s"));
+								header("Expires:$this->date");
 								header("Server: public,Node Server");
 								header("Developed-By: Pounze It-Solution Pvt Limited");
 								header("Pragma: public,max-age=31536000");
@@ -351,7 +352,7 @@
 							header('HTTP/1.0 404 Not Found');
 							header("Cache-Control: public,max-age=31536000");
 							header("Keep-Alive: timeout=5, max=500");
-							header("Expires:"+date("Y-m-d H:i:s"));
+							header("Expires:$this->date");
 							header("Server: public,Node Server");
 							header("Developed-By: Pounze It-Solution Pvt Limited");
 							header("Pragma: public,max-age=31536000");
@@ -407,7 +408,7 @@
 							header('HTTP/1.0 404 Not Found');
 							header("Cache-Control: public,max-age=31536000");
 							header("Keep-Alive: timeout=5, max=500");
-							header("Expires:"+date("Y-m-d H:i:s"));
+							header("Expires:$this->date");
 							header("Server: public,Node Server");
 							header("Developed-By: Pounze It-Solution Pvt Limited");
 							header("Pragma: public,max-age=31536000");
@@ -419,7 +420,7 @@
 						header('HTTP/1.0 404 Not Found');
 						header("Cache-Control: public,max-age=31536000");
 						header("Keep-Alive: timeout=5, max=500");
-						header("Expires:"+date("Y-m-d H:i:s"));
+						header("Expires:$this->date");
 						header("Server: public,Node Server");
 						header("Developed-By: Pounze It-Solution Pvt Limited");
 						header("Pragma: public,max-age=31536000");
@@ -472,7 +473,7 @@
 						header('HTTP/1.0 404 Not Found');
 						header("Cache-Control: public,max-age=31536000");
 						header("Keep-Alive: timeout=5, max=500");
-						header("Expires:"+date("Y-m-d H:i:s"));
+						header("Expires:$this->date");
 						header("Server: public,Node Server");
 						header("Developed-By: Pounze It-Solution Pvt Limited");
 						header("Pragma: public,max-age=31536000");
@@ -485,7 +486,7 @@
 					header('HTTP/1.0 404 Not Found');
 					header("Cache-Control: public,max-age=31536000");
 					header("Keep-Alive: timeout=5, max=500");
-					header("Expires:"+date("Y-m-d H:i:s"));
+					header("Expires:$this->date");
 					header("Server: public,Node Server");
 					header("Developed-By: Pounze It-Solution Pvt Limited");
 					header("Pragma: public,max-age=31536000");
@@ -494,10 +495,5 @@
 				}
 			}
 	    }
-
-		public function __destruct()
-		{
-			unset($this);
-		}
 	}
 ?>

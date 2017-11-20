@@ -22,12 +22,12 @@
 		public static function bind($find,$replace,$file)
 		{
 			// if filename is empty then 404 error is thrown
-			
+			$date = date("D, m Y H:i:s");
 			if(empty($file))
 			{
 				eader("Cache-Control: public,max-age=31536000");
 				header("Keep-Alive: timeout=5, max=500");
-				header("Expires:"+date("Y-m-d H:i:s"));
+				header("Expires:$date");
 				header("Server: public,Node Server");
 				header("Developed-By: Pounze It-Solution Pvt Limited");
 				header("Pragma: public,max-age=31536000");
@@ -42,7 +42,7 @@
 			{
 				header("Cache-Control: public,max-age=31536000");
 				header("Keep-Alive: timeout=5, max=500");
-				header("Expires:"+date("Y-m-d H:i:s"));
+				header("Expires:$date");
 				header("Server: public,Node Server");
 				header("Developed-By: Pounze It-Solution Pvt Limited");
 				header("Pragma: public,max-age=31536000");
@@ -65,7 +65,7 @@
 				header('HTTP/1.0 404 Not Found');
 				header("Cache-Control: public,max-age=31536000");
 				header("Keep-Alive: timeout=5, max=500");
-				header("Expires:"+date("Y-m-d H:i:s"));
+				header("Expires:$date");
 				header("Server: public,Node Server");
 				header("Developed-By: Pounze It-Solution Pvt Limited");
 				header("Pragma: public,max-age=31536000");
