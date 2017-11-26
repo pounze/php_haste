@@ -6,7 +6,7 @@
 
 	class Views
 	{
-		public static function render($view_name,$views_data)
+		public static function render($view_name)
 		{
 			if(file_exists('templates/'.$view_name.'.php'))
 			{

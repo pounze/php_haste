@@ -13,6 +13,7 @@
 
 			if(isset($input['mapping']) && !empty($input['mapping']))
 			{
+				$input['mapping'] = str_replace('.', '/', $input['mapping']);
 				if(file_exists(ROOT_DIR.'/'.$input['mapping'].'/'.$input['cortex'].'.php'))
 				{
 					require_once ROOT_DIR.'/'.$input['mapping'].'/'.$input['cortex'].'.php';
