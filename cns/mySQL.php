@@ -2,7 +2,9 @@
     
 
   namespace DB;
-  
+
+  require_once 'config/configuration.php';
+
   class mySQL
   {
 
@@ -16,7 +18,7 @@
         /*
             php pdo connection is initiated
         */
-        if(isset($user) && !empty($user) && isset($password) && !empty($password))
+        if($config["mySql"]["status"])
         {
           try 
           {
@@ -215,6 +217,6 @@
 
   }
 
-$mySQLObject = new mySQL($config["mySql"]["host"],$config["mySql"]["database"],$config["mySql"]["username"],$config["mySql"]["password"],$config);
+$dbobj = new mySQL($config["mySql"]["host"],$config["mySql"]["database"],$config["mySql"]["username"],$config["mySql"]["password"],$config);
 
 ?>

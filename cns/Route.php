@@ -18,7 +18,7 @@
 				setting the request uri variables
 			*/
 			$this->request_uri =  parse_url($_SERVER['REQUEST_URI']);
-			$this->request_uri['path'] = str_replace('haste/','', $this->request_uri['path']);
+			$this->request_uri['path'] = str_replace('tripkle_hotel_admin/','', $this->request_uri['path']);
 
 			/*
 				This line is checking for request method whether its a post request or any other request using $_REQUEST['REQUEST_METHOD'] globals variables
@@ -223,6 +223,7 @@
 			foreach($this->globalObject as $key=>$value)
 			{
 				$url = $this->globalObject[$key]['regex'];
+
 				if(preg_match("#^$url$#", $this->request_uri['path']) && $requestMethod == $this->globalObject[$key]['request_type'])
 				{
 					$requestUriArr = explode('/',$this->request_uri['path']);

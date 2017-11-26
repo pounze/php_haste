@@ -9,24 +9,27 @@
 		{
 			if(isset($user) && !empty($user) && isset($password) && !empty($password))
 			{
-				try
+				if($config["mongo"]["status"])
 				{
-					self::$manager = new \MongoDB\Driver\Manager("mongodb://".$user.":".$password."@".$host.":".$port."/".$dbname);
+					try
+					{
+						self::$manager = new \MongoDB\Driver\Manager("mongodb://".$user.":".$password."@".$host.":".$port."/".$dbname);
+					}
+					catch(\PDOException $e)
+		            {
+
+			            /*
+			              If error is thrown then mysql_connect_error.html page is thrown
+			            */
+			            echo file_get_contents(ROOT_DIR."/error_files/mongo_connect_error.html");
+
+			            if($config["mySql"]["log"])
+			            {
+			              file_put_contents(ROOT_DIR.'/logs/mongo.log', $e->getMessage(). PHP_EOL, FILE_APPEND);
+			            }
+			            die();
+		          	}
 				}
-				catch(\PDOException $e)
-	            {
-
-	            /*
-	              If error is thrown then mysql_connect_error.html page is thrown
-	            */
-	            echo file_get_contents(ROOT_DIR."/error_files/mongo_connect_error.html");
-
-	            if($config["mySql"]["log"])
-	            {
-	              file_put_contents(ROOT_DIR.'/logs/mongo.log', $e->getMessage(). PHP_EOL, FILE_APPEND);
-	            }
-	            die();
-	          }
 			}
 		}
 

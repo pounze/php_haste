@@ -7,6 +7,9 @@
 namespace Kernel\App\Core;
 
 require_once ROOT_DIR.'/cns/Thalamus.php';
+require ROOT_DIR.'/cns/MongoDB.php';
+require ROOT_DIR.'/cns/mySQL.php';
+require ROOT_DIR.'/cns/Orm.php';
 
 use Kernel\App\Core\BlockList;
 use Kernel\App\Core\Thalamus;
