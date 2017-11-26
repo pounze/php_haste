@@ -5,10 +5,11 @@
 		[
 			"host"=>"localhost",
 			"port"=>3306,
-			"username"=>"",
-			"password"=>"",
+			"username"=>"root",
+			"password"=>"kaihiwatari",
 			"database"=>"",
-			"log"=>false
+			"log"=>false,
+			"status"=>false
 		],
 		"server"=>
 		[
@@ -22,9 +23,10 @@
 		[
 			"host"=>"localhost",
 			"port"=>27017,
-			"username"=>"root",
-			"password"=>"root123",
-			"database"=>"DB"
+			"username"=>"",
+			"password"=>"",
+			"database"=>"tripkle",
+			"status"=>true
 		],
 		"log"=>false,
 		"log_path"=>"",
