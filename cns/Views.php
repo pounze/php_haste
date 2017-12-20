@@ -19,7 +19,7 @@
 			}
 		}
 
-		public static function bind($find,$replace,$file)
+		public static function bind($Render,$file)
 		{
 			// if filename is empty then 404 error is thrown
 			$date = date("D, m Y H:i:s");
@@ -54,7 +54,14 @@
 				$handle = fopen($filename, "r");
 				$page = fread($handle, filesize($filename));
 				fclose($handle);
-				echo str_replace($find,$replace, $page);
+				$findData = [];
+				$replaceData = [];
+				foreach($Render as $renderKey=>$renderVal)
+				{
+					array_push($findData, $renderKey);
+					array_push($replaceData, $renderVal);
+				}
+				echo str_replace($findData,$replaceData, $page);
 				$length = ob_get_length();
 				header("Content-Length:$length");
 				ob_flush(); 
