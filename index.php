@@ -89,6 +89,7 @@ try
 
 			if(isset($_REQUEST['cortex']) && !empty($_REQUEST['cortex']) && $_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+				$_POST = $_REQUEST;
 				$_REQUEST = null;
 				$_GET = null;
 				$_POST['url'] = $_SERVER['REQUEST_URI'];
@@ -97,6 +98,7 @@ try
 			else
 			{
 				$route->execute();
+				$route = null;
 				unset($route);
 
 				$Bootstrap = new Bootstrap();
@@ -116,6 +118,7 @@ try
 					$Router = new Router($_GET);
 					unset($Router);
 				}
+				$Bootstrap = null;
 				unset($Bootstrap);
 			}
 		}
