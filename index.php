@@ -16,14 +16,6 @@ require_once 'cns/Route.php';
 require_once 'route/Web.php';
 require_once 'cns/Views.php';
 require_once 'cns/Response.php';
-require_once 'Lobes/Date.php';
-require_once 'Lobes/FCM.php';
-require_once 'Lobes/Log.php';
-require_once 'Lobes/Net.php';
-require_once 'Lobes/Remote.php';
-require_once 'Lobes/Scaleimage.php';
-require_once 'Lobes/Timer.php';
-require_once 'Lobes/ObjectMeth.php';
 require_once 'cns/BlockList.php';
 
 
@@ -31,14 +23,6 @@ use Kernel\App\Core\Bootstrap;
 use Kernel\App\Core\Router;
 use Kernel\App\Core\Controller;
 use Kernel\App\Route\Web;
-use Libraries\Lobes\Miscellaneous\Date;
-use Libraries\Lobes\Miscellaneous\FCM;
-use Libraries\Lobes\Miscellaneous\Log;
-use Libraries\Lobes\Miscellaneous\Net;
-use Libraries\Lobes\Miscellaneous\Remote;
-use Libraries\Lobes\Miscellaneous\Scaleimage;
-use Libraries\Lobes\Miscellaneous\Timer;
-use Libraries\Lobes\Miscellaneous\ObjectMeth;
 use Kernel\App\RequestRoute\Route;
 use Kernel\App\Core\BlockList;
 
