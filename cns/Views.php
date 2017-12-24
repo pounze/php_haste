@@ -25,7 +25,7 @@
 			$date = date("D, m Y H:i:s");
 			if(empty($file))
 			{
-				eader("Cache-Control: public,max-age=31536000");
+				header("Cache-Control: public,max-age=31536000");
 				header("Keep-Alive: timeout=5, max=500");
 				header("Expires:$date");
 				header("Server: public,Node Server");
