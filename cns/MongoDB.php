@@ -180,6 +180,11 @@
 				return $e->getMessage();
 			}
 		}
+
+		public static function toObjectId($String)
+		{
+			return new \MongoDB\BSON\ObjectId($String);
+		}
 	}
 
 	$mongoObject = new MongoDB($config["mongo"]["host"],$config["mongo"]["port"],$config["mongo"]["database"],$config["mongo"]["username"],$config["mongo"]["password"],$config);
