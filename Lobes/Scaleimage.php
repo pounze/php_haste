@@ -91,19 +91,34 @@
 		}
 		public static function dimension($image,$image_type,$width,$height,$dir,$mvdir)
 		{
-			list($source_imagex,$source_imagey) = getimagesize($dir.$image);
-			if($image_type == 'image/jpeg')
+			if (!extension_loaded('gd'))
 			{
-				$front_new = @imagecreatefromjpeg($dir.$image);
+			    if(!dl('gd.so'))
+			    {
+			    	die('Please install GD library to use this method');
+			    }
 			}
-			if($image_type == 'image/png')
+
+			list($source_imagex,$source_imagey) = getimagesize($dir.$image);
+
+			if($image_type == 'image/jpeg')
 			{
 				$front_new = @imagecreatefromstring(file_get_contents(($dir.$image)));
 			}
-			if($image_type == 'image/gif')
+			else if($image_type == 'image/png')
+			{
+				$front_new = @imagecreatefromstring(file_get_contents(($dir.$image)));
+			}
+			else if($image_type == 'image/gif')
 			{
 				$front_new = @imagecreatefromgif($dir.$image);
 			}
+			else
+			{
+				$front_new = @imagecreatefromstring(file_get_contents(($dir.$image)));
+			}
+
+			
 			$createimage = imagecreatetruecolor($width,$height);
 			imagealphablending($createimage, false);
 			imagesavealpha($createimage,true);
@@ -147,7 +162,17 @@
 
 		public static function square($image,$image_type,$size,$dir,$mvdir)
 		{
-			list($width,$height) = getimagesize($dir.$image);
+			if (!extension_loaded('gd'))
+			{
+			    if(!dl('gd.so'))
+			    {
+			    	die('Please install GD library to use this method');
+			    }
+			}
+
+
+			list($source_imagex,$source_imagey) = getimagesize($dir.$image);
+
 			if($image_type == 'image/jpeg')
 			{
 				$front_new = @imagecreatefromstring(file_get_contents(($dir.$image)));
@@ -162,8 +187,10 @@
 			}
 			else
 			{
-				@imagecreatefromstring(file_get_contents(($dir.$image)));
+				$front_new = @imagecreatefromstring(file_get_contents(($dir.$image)));
 			}
+
+			
 			if ($width > $height)
 			{
 				$y = 0;
