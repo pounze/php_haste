@@ -187,14 +187,14 @@
 
       {
         // php method to fetch sql data in object form
-         return self::$query->fetch(PDO::FETCH_OBJ);
+         return self::$query->fetch(\PDO::FETCH_OBJ);
       }
 
       public static function fetchAll()
 
       {
         // fetching all the data in object form
-        return self::$query->fetchAll(PDO::FETCH_OBJ);
+        return self::$query->fetchAll(\PDO::FETCH_OBJ);
       }
 
       public static function errorQuery()
