@@ -40,12 +40,25 @@
 
 			if(file_exists(ROOT_DIR.'/views/'.$file))
 			{
-				header("Cache-Control: public,max-age=31536000");
 				header("Keep-Alive: timeout=5, max=500");
 				header("Expires:$date");
 				header("Server: public,Node Server");
 				header("Developed-By: Pounze It-Solution Pvt Limited");
-				header("Pragma: public,max-age=31536000");
+				
+			   $fileMTime = filemtime(ROOT_DIR.'/views/'.$file);
+
+			   $headers = apache_request_headers();
+
+			   	if (isset($headers['if-modified-since']) && ($headers['if-modified-since'] == $fileMTime))
+			   	{
+		            // Client's cache IS current, so we just respond '304 Not Modified'.
+		            header('Last-Modified: '.$fileMTime, true, 304);
+		        }
+		        else
+		        {
+		            // Image not cached or cache outdated, we respond '200 OK' and output the image.
+		            header('Last-Modified: '.$fileMTime, true, 200);
+		        }
 
 				$ob = ob_start();
 				$stuff = ob_get_contents();
