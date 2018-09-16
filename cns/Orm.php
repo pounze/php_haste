@@ -44,6 +44,7 @@
 			$this->user = $config["mySql"]["username"];
 
 			$this->password = $config["mySql"]["password"];
+
             $this->db = new \PDO("mysql:host=".$this->host.";dbname=".$this->dbname,$this->user,$this->password) or die('Could not connect to database');
           }
           catch(\PDOException $e)
@@ -435,17 +436,29 @@
 
 		}
 
+		public function beginTransactionQuery()
+		{
+			$this->db->beginTransaction();
+			return $this;
+		}
 
+		public function commitQuery()
+		{
+			$this->db->commit();
+			return $this;
+		}
+
+		public function rollbackQuery()
+		{
+			$this->db->rollback();
+			return $this;
+		}
 
 		public function prepare($bind)
 
 		{
 
 			// prepare statements for binding values
-
-
-
-			$this->db->beginTransaction();
 
 	        $this->QUERY = $this->db->prepare($this->query);
 
@@ -469,8 +482,6 @@
 
 	         	$this->lastInsertId = $this->db->lastInsertId();
 
-	          	$this->db->commit();
-
 	          	return $this->QUERY;
 
 	        }
@@ -478,8 +489,6 @@
 	        catch(Exception $e)
 
 	        {
-
-	            $this->db->rollback();
 
 	            return  $e->getMessage();
 
@@ -491,6 +500,7 @@
 	   public static function closeConnection()
       {
         $this->db = null;
+        $this->QUERY = null;
       }
 
 
@@ -500,17 +510,11 @@
 
       		// simple query for select
 
-
-
-         	$this->db->beginTransaction();
-
 	         try
 
 	         {
 
 	          $this->QUERY = $this->db->query($this->query);
-
-	          $this->db->commit();
 
 	          return $this->QUERY;
 
@@ -519,9 +523,6 @@
 	         catch(Exception $e)
 
 	         {
-
-	            $this->db->rollback();
-
 	            return  $e->getMessage();
 
 	         }
@@ -537,9 +538,6 @@
       		// simple query for insert and update
 
 
-
-         	$this->db->beginTransaction();
-
          	try
 
          	{
@@ -548,8 +546,6 @@
 
           		$this->lastInsertId = $this->db->lastInsertId();
 
-          		$this->db->commit();
-
           		return $this->QUERY;
 
          	}
@@ -557,9 +553,6 @@
          	catch(Exception $e)
 
          	{
-
-            	$this->db->rollback();
-
             	return  $e->getMessage();
 
          	}
@@ -604,7 +597,7 @@
 
       	}
 
-      	public static function errorQuery()
+      	public function errorQuery()
 
       	{
 
@@ -613,6 +606,12 @@
       		
 
          	return $this->error = $this->db->errorInfo();
+      	}
+
+      	public function close()
+      	{
+      		$this->db = null;
+      		$this->QUERY = null;
       	}
 
 
