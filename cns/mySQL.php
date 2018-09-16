@@ -1,5 +1,4 @@
 <?php
-    
 
   namespace DB;
 
@@ -7,216 +6,244 @@
 
   class mySQL
   {
+    private $query,$lastInsertId,$db,$config;
 
-  //class for mysql queries easy to use
-
-  
-    private static $db,$query,$lastInsertId,$error;
-
-    public function __construct($host,$dbname,$user,$password,$config)
+    public function __construct()
     {
-        /*
-            php pdo connection is initiated
-        */
-        if($config["mySql"]["status"])
+      global $config;
+
+      $this->config = $config;
+
+      if(isset($this->config["mySql"]["status"]) && $this->config["mySql"]["status"])
+      {
+        try 
         {
-          try 
-          {
-            self::$db = new \PDO("mysql:host=".$host.";dbname=".$dbname,$user,$password);
-          }
-          catch(\PDOException $e)
-          {
+          $options = [
+            \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+            \PDO::ATTR_EMULATE_PREPARES   => false,
+            \PDO::ATTR_PERSISTENT => true
+          ];
 
-            /*
-              If error is thrown then mysql_connect_error.html page is thrown
-            */
-            echo file_get_contents(ROOT_DIR."/error_files/mysql_connect_error.html");
+          $this->db = new \PDO("mysql:host=".$this->config["mySql"]["host"].";dbname=".$this->config["mySql"]["database"],$this->config["mySql"]["username"],$this->config["mySql"]["password"],$options);
 
-            if($config["mySql"]["log"])
-            {
-              file_put_contents(ROOT_DIR.'/logs/mySQL.log', $e->getMessage(). PHP_EOL, FILE_APPEND);
-            }
-            die();
-          }
+          return $this->db;
         }
+        catch(\PDOException $e)
+        {
+
+          /*
+            If error is thrown then mysql_connect_error.html page is thrown
+          */
+          echo file_get_contents(ROOT_DIR."/error_files/mysql_connect_error.html");
+
+          if($this->config["mySql"]["log"])
+          {
+            file_put_contents(ROOT_DIR.'/logs/mySQL.log', $e->getMessage(). PHP_EOL, FILE_APPEND);
+          }
+          
+          die();
+        }
+      }
     }
 
-      public static function prepare($bind,$param)
+    public function beginTransaction()
+    {
+      $this->db->beginTransaction();
+    }
 
+    public function commit()
+    {
+      $this->db->commit();
+    }
+
+    public function rollback()
+    {
+      $this->db->rollback();
+    }
+
+    public function prepare($bind,$param)
+    {
+      /*
+        php pdo prepare statement
+      */
+     
+      $this->query = $this->db->prepare($param());
+
+      $bindLen = sizeof($bind);
+
+      for($i=0;$i<$bindLen;$i++)
       {
 
-        /*
-          php pdo prepare statement
-        */
+        $j = $i + 1;
 
-         self::$db->beginTransaction();
-
-         self::$query = self::$db->prepare($param());
-
-         $bindLen = sizeof($bind);
-
-         for($i=0;$i<$bindLen;$i++)
-         {
-
-            $j = $i + 1;
-
-            self::$query->bindParam($j,$bind[$i]);
-
-         }
-         try
-         {
-
-          self::$query->execute();
-
-          self::$lastInsertId = self::$db->lastInsertId();
-
-          self::$db->commit();
-
-          return self::$query;
-
-         }
-
-         catch(Exception $e)
-
-         {
-
-            self::$db->rollback();
-
-            if($config->sql->log)
-            {
-              file_put_contents(ROOT_DIR.'/logs/mySQL.log', $e->getMessage(). PHP_EOL, FILE_APPEND);
-            }
-
-            return  $e->getMessage();
-
-         }
-
+        $this->query->bindParam($j,$bind[$i]);
       }
 
-      public static function query($param)
-
+      try
       {
-        // php query statement
-         self::$db->beginTransaction();
 
-         try
+        $this->query->execute();
 
-         {
+        $this->lastInsertId = $this->db->lastInsertId();
 
-          self::$query = self::$db->query($param());
+        $this->db = null;
 
-          self::$lastInsertId = self::$db->lastInsertId();
-
-          self::$db->commit();
-
-          return self::$query;
-
-         }
-
-         catch(Exception $e)
-
-         {
-
-            self::$db->rollback();
-            
-            if($config->sql->log)
-            {
-              file_put_contents(ROOT_DIR.'/logs/mySQL.log', $e->getMessage(). PHP_EOL, FILE_APPEND);
-            }
-
-            return  $e->getMessage();
-
-         }
+        return $this->query;
 
       }
-
-      public static function exec($param)
-
+      catch(Exception $e)
       {
-        // php execute statement
-         self::$db->beginTransaction();
+        if($this->config["mySql"]["log"])
+        {
+          file_put_contents(ROOT_DIR.'/logs/mySQL.log', $e->getMessage(). PHP_EOL, FILE_APPEND);
+        }
 
-         try
-
-         {
-
-          self::$query = self::$db->exec($param());
-
-          self::$lastInsertId = self::$db->lastInsertId();
-
-          self::$db->commit();
-
-          return self::$query;
-
-         }
-
-         catch(Exception $e)
-
-         {
-
-            self::$db->rollback();
-
-            if($config->sql->log)
-            {
-              file_put_contents(ROOT_DIR.'/logs/mySQL.log', $e->getMessage(). PHP_EOL, FILE_APPEND);
-            }
-
-            return  $e->getMessage();
-
-         }
+        return  $e->getMessage();
 
       }
 
-      public static function rowCount()
+    }
 
-      {  
-        // php method for row count
-         return self::$query->rowCount();
+    public function query($param)
+    {
+      // php query statement
+     try
+     {
+      $this->query = $this->db->query($param());
 
-      }
+      $this->lastInsertId = $this->db->lastInsertId();
 
-      public static function InsertID()
+      return $this->query;
+     }
 
+     catch(Exception $e)
+     {
+
+      if($this->config["mySql"]["log"])
       {
-        // php method for getting the last insert id
-         return self::$lastInsertId;
-
+        file_put_contents(ROOT_DIR.'/logs/mySQL.log', $e->getMessage(). PHP_EOL, FILE_APPEND);
       }
 
-      public static function fetchObject()
+      return  $e->getMessage();
 
+     }
+
+    }
+
+    public function plainQuery($param)
+    {
+      // php query statement
+     try
+     {
+      $this->query = $this->db->query($param);
+
+      $this->lastInsertId = $this->db->lastInsertId();
+
+      return $this->query;
+     }
+
+     catch(Exception $e)
+     {
+
+      if($this->config["mySql"]["log"])
       {
-        // php method to fetch sql data in object form
-         return self::$query->fetch(\PDO::FETCH_OBJ);
+        file_put_contents(ROOT_DIR.'/logs/mySQL.log', $e->getMessage(). PHP_EOL, FILE_APPEND);
       }
 
-      public static function fetchAll()
+      return  $e->getMessage();
 
-      {
-        // fetching all the data in object form
-        return self::$query->fetchAll(\PDO::FETCH_OBJ);
-      }
+     }
 
-      public static function errorQuery()
+    }
 
-      {
-        // if any error occurs
-         self::$error = self::$db->errorInfo();
-      }
+    public function exec($param)
+    {
+     try
+     {
 
-      public static function closeConnection()
-      {
-        self::$db = null;
-      }
+      $this->query = $this->db->exec($param());
 
-      public function __destruct()
-      {
-        self::$db = null;
-        unset($ConfigOBJ);
-      }
+      $this->lastInsertId = $this->db->lastInsertId();
 
+      $this->db = null;
+
+      return $this->query;
+     }
+     catch(Exception $e)
+     {
+        if($this->config["mySql"]["log"])
+        {
+          file_put_contents(ROOT_DIR.'/logs/mySQL.log', $e->getMessage(). PHP_EOL, FILE_APPEND);
+        }
+        return  $e->getMessage();
+     }
+
+    }
+
+    public function plainExec($param)
+    {
+     try
+     {
+
+      $this->query = $this->db->exec($param);
+
+      $this->lastInsertId = $this->db->lastInsertId();
+
+      $this->db = null;
+
+      return $this->query;
+     }
+     catch(Exception $e)
+     {
+        if($this->config["mySql"]["log"])
+        {
+          file_put_contents(ROOT_DIR.'/logs/mySQL.log', $e->getMessage(). PHP_EOL, FILE_APPEND);
+        }
+        return  $e->getMessage();
+     }
+
+    }
+
+    public function rowCount()
+    {  
+      // php method for row count
+       return $this->query->rowCount();
+
+    }
+
+    public function InsertID()
+    {
+      // php method for getting the last insert id
+       return $this->lastInsertId;
+
+    }
+
+    public function fetchObject()
+    {
+      // php method to fetch sql data in object form
+       return $this->query->fetch(\PDO::FETCH_OBJ);
+    }
+
+    public function fetchAll()
+    {
+      // fetching all the data in object form
+      return $this->query->fetchAll(\PDO::FETCH_OBJ);
+    }
+
+    public function errorQuery()
+    {
+      // if any error occurs
+       $this->error = $this->db->errorInfo();
+    }
+
+    public function close()
+    {
+      // if any error occurs
+      $this->db = null;
+      $this->query = null;
+
+      unset($this->db);
+    }
   }
-
-$dbobj = new mySQL($config["mySql"]["host"],$config["mySql"]["database"],$config["mySql"]["username"],$config["mySql"]["password"],$config);
-
-?>
+?>  
