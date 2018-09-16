@@ -4,16 +4,23 @@
 
 	class MongoDB
 	{
-		private static $manager;
-		public function __construct($host,$port,$dbname,$user,$password,$config)
+		private static $manager,$db,$config;
+
+		public function __construct($config)
 		{
-			if(isset($user) && !empty($user) && isset($password) && !empty($password))
+			self::$config = $config;
+		}
+
+		public static function connectDB()
+		{
+			if(isset(self::$config["mongo"]["username"]) && !empty(self::$config["mongo"]["username"]) && isset(self::$config["mongo"]["password"]) && !empty(self::$config["mongo"]["password"]))
 			{
-				if($config["mongo"]["status"])
+				if(self::$config["mongo"]["status"])
 				{
 					try
 					{
-						self::$manager = new \MongoDB\Driver\Manager("mongodb://".$user.":".$password."@".$host.":".$port."/".$dbname);
+						self::$db = $dbname;
+						self::$manager = new \MongoDB\Driver\Manager("mongodb://".self::$config["mongo"]["username"].":".self::$config["mongo"]["password"]."@".self::$config["mongo"]["host"].":".self::$config["mongo"]["port"]."/".self::$config["mongo"]["database"]);
 					}
 					catch(\PDOException $e)
 		            {
@@ -23,7 +30,32 @@
 			            */
 			            echo file_get_contents(ROOT_DIR."/error_files/mongo_connect_error.html");
 
-			            if($config["mySql"]["log"])
+			            if(self::$config["mongo"]["log"])
+			            {
+			              file_put_contents(ROOT_DIR.'/logs/mongo.log', $e->getMessage(). PHP_EOL, FILE_APPEND);
+			            }
+			            die();
+		          	}
+				}
+			}
+			else
+			{
+				if(self::$config["mongo"]["status"])
+				{
+					try
+					{	
+						self::$db = self::$config["mongo"]["database"];					
+						self::$manager = new \MongoDB\Driver\Manager("mongodb://".self::$config["mongo"]["host"].":".self::$config["mongo"]["port"]."/".self::$config["mongo"]["database"]);
+					}
+					catch(\PDOException $e)
+		            {
+
+			            /*
+			              If error is thrown then mysql_connect_error.html page is thrown
+			            */
+			            echo file_get_contents(ROOT_DIR."/error_files/mongo_connect_error.html");
+
+			            if(self::$config["mongo"]["log"])
 			            {
 			              file_put_contents(ROOT_DIR.'/logs/mongo.log', $e->getMessage(). PHP_EOL, FILE_APPEND);
 			            }
@@ -42,9 +74,11 @@
 			
 			try
 			{
+				self::connectDB();
+
 				$query = new \MongoDB\Driver\Query($filter, $option);
 
-				return self::$manager->executeQuery($collectionName, $query);
+				return self::$manager->executeQuery(self::$db.".".$collectionName, $query);
 			}
 			catch(MongoDB\Driver\Exception\Exception $e)
 			{
@@ -60,9 +94,11 @@
 		{
 			try
 			{
+				self::connectDB();
+
 				$command = new \MongoDB\Driver\Command($query);
 
-				return self::$manager->executeCommand($collectionName,$command);
+				return self::$manager->executeCommand(self::$db.".".$collectionName,$command);
 			}
 			catch(MongoDB\Driver\Exception\Exception $e)
 			{
@@ -87,8 +123,10 @@
 		{
 			try
 			{
+				self::connectDB();
+
 				$writeConcern = new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY,100);
-			    return self::$manager->executeBulkWrite($collectionName,$bulkObj,$writeConcern);
+			    return self::$manager->executeBulkWrite(self::$db.".".$collectionName,$bulkObj,$writeConcern);
 			}
 			catch(MongoDB\Driver\Exception\Exception $e)
 			{
@@ -102,6 +140,8 @@
 
 		public static function getServers()
 		{
+			self::connectDB();
+
 			return self::$manager->getServers();
 		}
 
@@ -187,5 +227,5 @@
 		}
 	}
 
-	$mongoObject = new MongoDB($config["mongo"]["host"],$config["mongo"]["port"],$config["mongo"]["database"],$config["mongo"]["username"],$config["mongo"]["password"],$config);
+	new MongoDB($config);
 ?>
