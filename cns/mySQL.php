@@ -27,7 +27,6 @@
 
           $this->db = new \PDO("mysql:host=".$this->config["mySql"]["host"].";dbname=".$this->config["mySql"]["database"],$this->config["mySql"]["username"],$this->config["mySql"]["password"],$options);
 
-          return $this->db;
         }
         catch(\PDOException $e)
         {
@@ -86,8 +85,6 @@
         $this->query->execute();
 
         $this->lastInsertId = $this->db->lastInsertId();
-
-        $this->db = null;
 
         return $this->query;
 
