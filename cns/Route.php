@@ -18,13 +18,19 @@
 				setting the request uri variables
 			*/
 			$this->request_uri =  parse_url($_SERVER['REQUEST_URI']);
-			$this->request_uri['path'] = str_replace('tripkle_hotel_admin/','', $this->request_uri['path']);
 
 			/*
 				This line is checking for request method whether its a post request or any other request using $_REQUEST['REQUEST_METHOD'] globals variables
 			*/
 
-			($_SERVER['REQUEST_METHOD'] == "POST" ? $this->input = $_POST : $this->input = $_GET);
+			if($_SERVER['REQUEST_METHOD'] == "POST" || $_SERVER['REQUEST_METHOD'] == "PUT" || $_SERVER['REQUEST_METHOD'] == "DELETE" )
+			{
+				$this->input = $_POST;
+			}
+			else
+			{
+				$this->input = $_GET;
+			}
 
 			/*
 				This is checking for files request whther the request contains files or not
@@ -38,6 +44,11 @@
 			return $this;
 		}
 
+		public function defaultMethod($callback)
+		{
+			$callback();
+		}
+
 		
 
 		/*
@@ -48,7 +59,7 @@
 		{
 			// get method for get routers
 
-	        $this->globalObject[$uri] = [
+	        $this->globalGETObject[$uri] = [
 	            "uri"=>$uri,
 	            "request_type"=>"GET",
 	            "argument"=>$argument,
@@ -56,6 +67,8 @@
 	        ];
 
 	        $this->path = $uri;
+
+	        $this->requestType = "GET";
 
 	        return $this;
 		}
@@ -68,7 +81,7 @@
 		{
 			// post method for post routes
 
-	        $this->globalObject[$uri] = [
+	        $this->globalPOSTObject[$uri] = [
 	            "uri"=>$uri,
 	            "request_type"=>"POST",
 	            "argument"=>$argument,
@@ -76,6 +89,52 @@
 	        ];
 
 	        $this->path = $uri;
+
+	        $this->requestType = "POST";
+
+	        return $this;
+		}
+
+		/*
+			Put request function for getting the put request and setting values and methods in the getURI and getArguments methods
+		*/
+
+		public function put($uri,$argument)
+		{
+			// put method for get routers
+
+	        $this->globalPUTObject[$uri] = [
+	            "uri"=>$uri,
+	            "request_type"=>"PUT",
+	            "argument"=>$argument,
+	            "regex"=>$uri
+	        ];
+
+	        $this->path = $uri;
+
+	        $this->requestType = "PUT";
+
+	        return $this;
+		}
+
+		/*
+			Delete request function for getting the delete request and setting values and methods in the getURI and getArguments methods
+		*/
+
+		public function delete($uri,$argument)
+		{
+			// post method for post routes
+
+	        $this->globalDELETEObject[$uri] = [
+	            "uri"=>$uri,
+	            "request_type"=>"DELETE",
+	            "argument"=>$argument,
+	            "regex"=>$uri
+	        ];
+
+	        $this->path = $uri;
+
+	        $this->requestType = "DELETE";
 
 	        return $this;
 		}
@@ -87,8 +146,24 @@
 		function middlewares($middleware)
 	    {   
 
-	      $this->globalObject[$this->path]['middleware'] = $middleware;
+	      if($this->requestType == "GET")
+	      {
+	      	$this->globalGETObject[$this->path]['middleware'] = $middleware;
+	      }
+	      else if($this->requestType == "POST")
+	      {
+	      	$this->globalPOSTObject[$this->path]['middleware'] = $middleware;
+	      }
+	      else if($this->requestType == "PUT")
+	      {
+	      	$this->globalPUTObject[$this->path]['middleware'] = $middleware;
+	      }
+	      else
+	      {
+	      	$this->globalDELETEObject[$this->path]['middleware'] = $middleware;
+	      }
 
+	     
 	      return $this;
 
 	    }
@@ -101,13 +176,49 @@
 	    {
 	    	// checking for regular expression match
 
-	      $this->globalObject[$this->path]['regexExp'] = $regex;
-
-	      $this->globalObject[$this->path]['regex'] = $this->globalObject[$this->path]['uri'];
-
-	      foreach($this->globalObject[$this->path]['regexExp'] as $key=>$value)
+	      if($this->requestType == "GET")
 	      {
-	      	$this->globalObject[$this->path]['regex'] = str_replace($key,$this->globalObject[$this->path]['regexExp'][$key] , $this->globalObject[$this->path]['regex']);
+	      	$this->globalGETObject[$this->path]['regexExp'] = $regex;
+
+		    $this->globalGETObject[$this->path]['regex'] = $this->globalGETObject[$this->path]['uri'];
+
+		    foreach($this->globalGETObject[$this->path]['regexExp'] as $key=>$value)
+		    {
+		      	$this->globalGETObject[$this->path]['regex'] = str_replace($key,$this->globalGETObject[$this->path]['regexExp'][$key] , $this->globalGETObject[$this->path]['regex']);
+		    }
+	      }
+	      else if($this->requestType == "POST")
+	      {
+	      	$this->globalPOSTObject[$this->path]['regexExp'] = $regex;
+
+		    $this->globalPOSTObject[$this->path]['regex'] = $this->globalPOSTObject[$this->path]['uri'];
+
+		    foreach($this->globalPOSTObject[$this->path]['regexExp'] as $key=>$value)
+		    {
+		      	$this->globalPOSTObject[$this->path]['regex'] = str_replace($key,$this->globalPOSTObject[$this->path]['regexExp'][$key] , $this->globalPOSTObject[$this->path]['regex']);
+		    }
+	      }
+	      else if($this->requestType == "PUT")
+	      {
+	      	$this->globalPUTObject[$this->path]['regexExp'] = $regex;
+
+		    $this->globalPUTObject[$this->path]['regex'] = $this->globalPUTObject[$this->path]['uri'];
+
+		    foreach($this->globalPUTObject[$this->path]['regexExp'] as $key=>$value)
+		    {
+		      	$this->globalPUTObject[$this->path]['regex'] = str_replace($key,$this->globalPUTObject[$this->path]['regexExp'][$key] , $this->globalPUTObject[$this->path]['regex']);
+		    }
+	      }
+	      else
+	      {
+	      	$this->globalDELETEObject[$this->path]['regexExp'] = $regex;
+
+		    $this->globalDELETEObject[$this->path]['regex'] = $this->globalDELETEObject[$this->path]['uri'];
+
+		    foreach($this->globalDELETEObject[$this->path]['regexExp'] as $key=>$value)
+		    {
+		      	$this->globalDELETEObject[$this->path]['regex'] = str_replace($key,$this->globalDELETEObject[$this->path]['regexExp'][$key] , $this->globalDELETEObject[$this->path]['regex']);
+		    }
 	      }
 
 	      return $this;
@@ -217,6 +328,23 @@
 			$requestMethod = $_SERVER['REQUEST_METHOD'];
 
 			$notMatch = 0;
+
+			if($requestMethod == "GET")
+			{
+				$this->globalObject = $this->globalGETObject;
+			}
+			else if($requestMethod == "POST")
+			{
+				$this->globalObject = $this->globalPOSTObject;
+			}
+			else if($requestMethod == "PUT")
+			{
+				$this->globalObject = $this->globalPUTObject;
+			}
+			else
+			{
+				$this->globalObject = $this->globalDELETEObject;
+			}
 
 			// iterating to match the uri with the regex
 
